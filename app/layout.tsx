@@ -1,6 +1,6 @@
 import './globals.css'
 import type {Metadata} from 'next'
-import {Open_Sans} from 'next/font/google'
+import {Inter} from 'next/font/google'
 import React from "react";
 import {cn} from "@/lib/utils";
 import {ThemeProvider} from "@/components/providers/theme-provider";
@@ -8,10 +8,7 @@ import {getServerSession} from "next-auth";
 import SessionProvider from "@/components/session-provider";
 import {ModalProvider} from "@/components/providers/modal-providers";
 
-const openSans = Open_Sans({
-    subsets: ['latin'],
-    display: 'swap',
-})
+const inter = Inter({subsets: ['latin'], display: 'swap',})
 
 export const metadata: Metadata = {
     title: "Dashboard",
@@ -24,7 +21,7 @@ export default async function RootLayout({children,}: {
     const session = await getServerSession();
     return (
         <html lang="en">
-        <body className={cn(openSans.className, "bg-white dark:bg-[#313338]")}>
+        <body className={cn(inter.className, "bg-white dark:bg-[#313338]")}>
         <ThemeProvider
             attribute="class"
             defaultTheme="light"
