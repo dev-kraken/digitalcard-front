@@ -5,7 +5,7 @@ import * as React from "react"
 import {cn} from "@/lib/utils"
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
-import {Loader2} from "lucide-react";
+import {AlertOctagon, Loader2} from "lucide-react";
 import {zodResolver} from "@hookform/resolvers/zod"
 import * as z from "zod"
 import {Form, FormControl, FormField, FormItem, FormMessage} from "@/components/ui/form";
@@ -31,6 +31,7 @@ const formSchema = z.object({
 
 export function SignInForm({className, ...props}: UserAuthFormProps) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
+    const [visible, setVisible] = useState<boolean>(false)
     const [error, setError] = useState("");
     const searchParams = useSearchParams();
     const callbackUrl = searchParams.get("callbackUrl") || "/";
@@ -59,9 +60,9 @@ export function SignInForm({className, ...props}: UserAuthFormProps) {
             if (!res?.error) {
                 router.push(callbackUrl);
             } else {
-                setError("invalid email or password");
+                setError("Invalid email or password");
             }
-        } catch (error : any) {
+        } catch (error: any) {
             setIsLoading(false);
             setError(error);
             console.log(error);
@@ -71,7 +72,10 @@ export function SignInForm({className, ...props}: UserAuthFormProps) {
     return (
         <div className={cn("grid gap-6", className)} {...props}>
             {error && (
-                <p className="text-center bg-red-300 py-4 mb-6 rounded">{error}</p>
+                <p className="text-center bg-red-500 py-2 rounded text-white flex justify-center items-center gap-1">
+                    <AlertOctagon className="animate-pulse w-4 h-4"/>
+                    {error}
+                </p>
             )}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -100,11 +104,12 @@ export function SignInForm({className, ...props}: UserAuthFormProps) {
                                 control={form.control}
                                 name="password"
                                 render={({field}) => (
-                                    <FormItem>
+                                    <FormItem className="relative">
                                         <FormControl>
                                             <Input
+                                                type={visible ? "text" : "password"}
                                                 disabled={isLoading}
-                                                className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                                                className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 relative"
                                                 placeholder="********"
                                                 {...field}
                                             />
@@ -145,7 +150,7 @@ export function SignInForm({className, ...props}: UserAuthFormProps) {
                 <BsFacebook className="mr-2 h-4 w-4"/>
                 Sign in with Facebook
             </Button>
-            <button onClick={()=>signOut()}>asd</button>
+            <button onClick={() => signOut()}>asd</button>
             <Button disabled={isLoading} className="bg-[#4285F4] hover:bg-[#4285F4]/90">
                 <AiFillGoogleCircle className="w-5 h-5 mr-2"/>
                 Sign in with Google
