@@ -1,7 +1,10 @@
 "use client"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import {BadgeCheck} from "lucide-react";
+import {useParams} from "next/navigation";
 export function VerifyingAccount(){
+    const params = useParams();
+    console.log(params.id)
     return(
         <Alert variant="success">
             <AlertTitle className="text-2xl flex items-center font-bold"><BadgeCheck className="h-6 w-6 mr-1" />

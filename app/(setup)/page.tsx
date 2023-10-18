@@ -1,31 +1,19 @@
-"use client"
-import { useEffect } from "react";
 import { InitialModal } from "@/components/modals/initial-modal";
-import useAxiosAuth from "@/hooks/useAxiosAuth";
+import { AuthGetApi } from "@/lib/fetchData";
+import {redirect} from "next/navigation";
 
-const Home = () => {
-    const axiosAuth = useAxiosAuth();
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const cards = await axiosAuth.get('/api/Card/GetCardByUser');
-                console.log(cards);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchData().then(r => {
-            console.log(r)
-        });
-    }, [axiosAuth]);
-
-    return (
-        <div>
-            <InitialModal />
-        </div>
-    );
+type Card = {
+    id: number;
+    cardGuid: string;
+    cardName: string;
+    cardImageOrg: string;
+    cardImageSysName: string;
 };
 
-export default Home;
+export default async function Home() {
+    const card: Card[] = await AuthGetApi('/api/Card/GetCardByUser');
+    if (card.length > 0) {
+        return redirect('/dashboard')
+    }
+    return <InitialModal/>;
+}

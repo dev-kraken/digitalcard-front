@@ -11,7 +11,7 @@ import {ModalProvider} from "@/components/providers/modal-providers";
 const inter = Inter({subsets: ['latin'], display: 'swap',})
 
 export const metadata: Metadata = {
-    title: "Dashboard",
+    title: "Welcome Digital Business Card",
     description: "Next Level Digital Business Card",
 };
 

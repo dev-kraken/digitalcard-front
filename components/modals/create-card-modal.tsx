@@ -27,6 +27,7 @@ import {useRouter} from "next/navigation";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {Loader2} from "lucide-react";
+import {useModal} from "@/hooks/use-modal-store";
 
 const MAX_FILE_SIZE = 1000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -54,10 +55,12 @@ function getImageData(event: ChangeEvent<HTMLInputElement>) {
     return {files, displayUrl};
 }
 
-export const InitialModal = () => {
+export const CreateCardModal = () => {
     const [isMounted, setIsMounted] = useState(false);
     const [preview, setPreview] = useState("");
+    const {isOpen, onClose, type} = useModal();
     const router = useRouter();
+    const isModalOpen = isOpen && type === "createCard";
     const axiosAuth = useAxiosAuth();
     useEffect(() => {
         setIsMounted(true);
@@ -95,21 +98,31 @@ export const InitialModal = () => {
                 imageOrginalName: values.circle_image?.[0].name,
                 imageBase64: base64String,
             });
-            form.reset();
+            if (response.data.success){
+                form.reset();
 
-            router.refresh()
-            console.log(response);
+                router.refresh()
+                onClose();
+                setPreview("")
+            }
+
+
         } catch (error) {
             console.error("Error in onSubmit:", error);
         }
     };
+    const handelClose = () => {
+        form.reset();
+        onClose();
+        setPreview("")
+    }
 
     if (!isMounted) {
         return null;
     }
 
     return (
-        <Dialog open>
+        <Dialog open={isModalOpen} onOpenChange={handelClose}>
             <DialogContent className="bg-white text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center font-bold">
@@ -123,10 +136,13 @@ export const InitialModal = () => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <div className="space-y-8 px-6">
-                            <Avatar className="w-24 h-24 mx-auto">
-                                <AvatarImage src={preview}/>
-                                <AvatarFallback>PR</AvatarFallback>
-                            </Avatar>
+                            {preview && (
+                                <Avatar className="w-24 h-24 mx-auto">
+                                    <AvatarImage src={preview}/>
+                                    <AvatarFallback>PR</AvatarFallback>
+                                </Avatar>
+                            )}
+
                             <div className="flex items-center justify-center text-center">
                                 <FormField
                                     control={form.control}

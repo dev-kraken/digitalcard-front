@@ -1,16 +1,29 @@
-"use client";
+import { signIn, useSession } from "next-auth/react";
 import axios from "@/lib/axios";
-import {signIn, useSession} from "next-auth/react";
 
 export const useRefreshToken = () => {
-    const {data: session} = useSession();
+    const { data: session } = useSession();
 
-    return async () => {
-        const res = await axios.post("/auth/refresh", {
-            refresh: session?.user.refreshToken,
-        });
+    const refreshToken = async (session:any) => {
+        try {
+            console.log(session.user.refreshToken)
+            const res = await axios.post("/api/Auth/RefreshToken", {
+                accessToken: session?.user.accessToken,
+            });
 
-        if (session) session.user.accessToken = res.data.accessToken;
-        else await signIn();
+            // Check if the session exists
+            if (session) {
+                // Update the session with the new access token
+                session.user.accessToken = res.data.accessToken;
+            } else {
+                // If there's no session, sign the user in
+                await signIn(); // Replace with your auth provider name
+            }
+        } catch (error) {
+            // Handle errors (e.g., network issues, failed refresh) here
+            console.error("Token refresh failed:", error);
+        }
     };
+
+    return refreshToken;
 };
