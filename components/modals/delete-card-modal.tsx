@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/dialog";
 import {useModal} from "@/hooks/use-modal-store";
 import {Button} from "@/components/ui/button";
-import useAxiosAuth from "@/hooks/useAxiosAuth";
+// import useAxiosAuth from "@/hooks/useAxiosAuth";
 
 export const DeleteCardModal = () => {
-    const axiosAuth = useAxiosAuth();
+    // const axiosAuth = useAxiosAuth();
     const {isOpen, onClose, type, data} = useModal();
     const router = useRouter();
 
@@ -28,14 +28,14 @@ export const DeleteCardModal = () => {
         try {
             setIsLoading(true);
 
-            const response = await axiosAuth.post('/api/Card/CardDelete', {
-                id: passCard?.cardId
-            });
-
-            if (response.data.success) {
-                onClose();
-                router.refresh();
-            }
+            // const response = await axiosAuth.post('/api/Card/CardDelete', {
+            //     id: passCard?.cardId
+            // });
+            //
+            // if (response.data.success) {
+            //     onClose();
+            //     router.refresh();
+            // }
         } catch (error) {
             console.log(error);
         } finally {

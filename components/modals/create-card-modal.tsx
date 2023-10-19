@@ -61,7 +61,7 @@ export const CreateCardModal = () => {
     const {isOpen, onClose, type} = useModal();
     const router = useRouter();
     const isModalOpen = isOpen && type === "createCard";
-    const axiosAuth = useAxiosAuth();
+    // const axiosAuth = useAxiosAuth();
     useEffect(() => {
         setIsMounted(true);
     }, []);
@@ -93,18 +93,18 @@ export const CreateCardModal = () => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             const base64String = await fileToBase64(values.circle_image?.[0]);
-            const response = await axiosAuth.post('/api/Card/CardAdd', {
-                cardName: values.name,
-                imageOrginalName: values.circle_image?.[0].name,
-                imageBase64: base64String,
-            });
-            if (response.data.success){
-                form.reset();
-
-                router.refresh()
-                onClose();
-                setPreview("")
-            }
+            // const response = await axiosAuth.post('/api/Card/CardAdd', {
+            //     cardName: values.name,
+            //     imageOrginalName: values.circle_image?.[0].name,
+            //     imageBase64: base64String,
+            // });
+            // if (response.data.success){
+            //     form.reset();
+            //
+            //     router.refresh()
+            //     onClose();
+            //     setPreview("")
+            // }
 
 
         } catch (error) {

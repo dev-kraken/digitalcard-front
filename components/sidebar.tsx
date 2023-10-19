@@ -5,8 +5,7 @@ import {cn} from "@/lib/utils";
 import {useParams, usePathname} from "next/navigation";
 import {TrendingUpIcon, LayoutDashboard, WalletCards, Settings, QrCode} from "lucide-react";
 import {useEffect, useState} from "react";
-import useAxiosAuth from "@/hooks/useAxiosAuth";
-
+import axiosR from '@/utils/axios';
 const routes = [
     {
         label: 'Dashboard',
@@ -82,15 +81,13 @@ type CardData = {
 
 export const Sidebar = () => {
     const params = useParams();
-    const axiosAuth = useAxiosAuth();
     const [cardInfo, setCardInfo] = useState<CardData | null>(null);
-
     useEffect(() => {
-        if (params.cardID) {
+        if (params.cardID && typeof params.cardID === 'string') {
             (async () => {
                 try {
-                    const res = await axiosAuth.get(`/api/Card/GetCardById?id=${params.cardID}`);
-                    setCardInfo(res.data);
+                    const res = await axiosR.card.cardById(params.cardID.toString())
+                    setCardInfo(res);
                 } catch (error) {
                     // Handle error here
                 }
@@ -98,8 +95,8 @@ export const Sidebar = () => {
         } else {
             setCardInfo(null);
         }
-    }, [params.cardID, axiosAuth]);
-    const renderRoutes = params.cardID ? cardRoutes : routes;
+    }, [params.cardID]);
+    const renderRoutes = params.cardID ? routes : routes;
 
     return (
         <div className="space-y-4 py-4 flex flex-col h-full bg-gray-200 text-zinc-800">

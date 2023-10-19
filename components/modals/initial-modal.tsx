@@ -25,7 +25,7 @@ import {Button} from "@/components/ui/button";
 import {ChangeEvent, useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import useAxiosAuth from "@/hooks/useAxiosAuth";
+// import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {Loader2} from "lucide-react";
 
 const MAX_FILE_SIZE = 1000000;
@@ -58,7 +58,7 @@ export const InitialModal = () => {
     const [isMounted, setIsMounted] = useState(false);
     const [preview, setPreview] = useState("");
     const router = useRouter();
-    const axiosAuth = useAxiosAuth();
+    // const axiosAuth = useAxiosAuth();
     useEffect(() => {
         setIsMounted(true);
     }, []);
