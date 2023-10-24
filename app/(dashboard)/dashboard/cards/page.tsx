@@ -1,4 +1,3 @@
-import {PlusCircle} from "lucide-react";
 import {AllCards} from "@/components/card/all-cards";
 import {AddCard} from "@/components/card/add-card";
 

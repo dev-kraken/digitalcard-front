@@ -1,37 +1,36 @@
-import './globals.css'
 import type {Metadata} from 'next'
 import {Inter} from 'next/font/google'
+import './globals.css'
+import {NextAuthSession} from "@/components/providers/session-provider";
 import React from "react";
-import {cn} from "@/lib/utils";
 import {ThemeProvider} from "@/components/providers/theme-provider";
-import {getServerSession} from "next-auth";
-import SessionProvider from "@/components/session-provider";
 import {ModalProvider} from "@/components/providers/modal-providers";
 
-const inter = Inter({subsets: ['latin'], display: 'swap',})
+const inter = Inter({subsets: ['latin']})
 
 export const metadata: Metadata = {
     title: "Welcome Digital Business Card",
     description: "Next Level Digital Business Card",
 };
 
-export default async function RootLayout({children,}: {
+export default function RootLayout({
+                                       children,
+                                   }: {
     children: React.ReactNode
 }) {
-    const session = await getServerSession();
     return (
-        <html lang="en">
-        <body className={cn(inter.className, "bg-white dark:bg-[#313338]")}>
+        <html lang="en" suppressHydrationWarning>
+        <body className={inter.className}>
         <ThemeProvider
             attribute="class"
             defaultTheme="light"
             enableSystem={false}
             storageKey="devKraken-theme"
         >
-            <SessionProvider session={session}>
+            <NextAuthSession>
                 <ModalProvider/>
                 {children}
-            </SessionProvider>
+            </NextAuthSession>
         </ThemeProvider>
         </body>
         </html>

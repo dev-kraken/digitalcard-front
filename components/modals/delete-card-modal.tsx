@@ -12,10 +12,9 @@ import {
 } from "@/components/ui/dialog";
 import {useModal} from "@/hooks/use-modal-store";
 import {Button} from "@/components/ui/button";
-// import useAxiosAuth from "@/hooks/useAxiosAuth";
+import axiosAuthClient from "@/lib/axios/axios-client";
 
 export const DeleteCardModal = () => {
-    // const axiosAuth = useAxiosAuth();
     const {isOpen, onClose, type, data} = useModal();
     const router = useRouter();
 
@@ -27,15 +26,11 @@ export const DeleteCardModal = () => {
     const onClick = async () => {
         try {
             setIsLoading(true);
-
-            // const response = await axiosAuth.post('/api/Card/CardDelete', {
-            //     id: passCard?.cardId
-            // });
-            //
-            // if (response.data.success) {
-            //     onClose();
-            //     router.refresh();
-            // }
+            const deleteRes = await axiosAuthClient.card.cardDelete({id:passCard?.cardId})
+            if(deleteRes.success){
+                onClose();
+                router.refresh();
+            }
         } catch (error) {
             console.log(error);
         } finally {
@@ -91,7 +86,7 @@ export const DeleteCardModal = () => {
                                 Cancel
                             </Button>
                         )}
-                        <Button disabled={isLoading} variant="primary" onClick={onClick}>
+                        <Button disabled={isLoading} variant="default" onClick={onClick}>
                             Confirm
                         </Button>
                     </div>

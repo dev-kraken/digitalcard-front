@@ -1,48 +1,5 @@
 import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials"
-import type {NextAuthOptions} from "next-auth"
-import axios from "@/lib/axios";
-export const authOptions: NextAuthOptions = {
-    providers: [
-        CredentialsProvider({
-            name: 'Credentials',
-            credentials: {
-                username: {label: "Username", type: "text", placeholder: "DevKraken"},
-                password: {label: "Password", type: "password"}
-            },
-            async authorize(credentials: any) {
-                if (!credentials?.username || !credentials.password) {
-                    return null;
-                }
-                const response = await axios.post('/api/Auth/SignIn', {
-                    userName: credentials.username,
-                    password: credentials.password
-                });
-                const user = response.data;
-                if (user.success && user.accessToken !== null && user.name !== null) {
-                    return user
-                } else {
-                    return null
-                }
-            }
-        })
-    ],
-    pages: {
-        signIn: '/sign-in',
-    },
-    callbacks: {
-        async jwt({token, user}) {
-            return {...token, ...user}
-        },
-        async session({session, token, user}) {
-            session.user = token as any;
-            return session;
-        }
-    },
-    session: {
-        strategy: "jwt",
-    }
-};
+import {authOptions} from "@/lib/next-auth";
 
 export const handler = NextAuth(authOptions);
 

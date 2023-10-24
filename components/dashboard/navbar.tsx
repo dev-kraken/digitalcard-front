@@ -1,6 +1,6 @@
-import MobileSidebar from "@/components/mobile-sidebar";
-import {AvatarProfile} from "@/components/avatar";
-import DashboardTitle from "@/components/dashboard-title";
+import MobileSidebar from "@/components/dashboard/mobile-sidebar";
+import {AvatarProfile} from "@/components/dashboard/avatar";
+import DashboardTitle from "@/components/dashboard/dashboard-title";
 const Navbar = () => {
     return (
         <div className="flex items-center p-3 border-b">

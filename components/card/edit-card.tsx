@@ -13,7 +13,6 @@ interface NavigationItemProps {
     cardName: string;
     cardImage: string;
 }
-
 export const NavigationItem = (
     {
         cardId,
@@ -48,7 +47,7 @@ export const NavigationItem = (
                     label={cardName}
                 >
                     <Button
-                        variant="primary"
+                        variant="default"
                         onClick={onClick}
                     >
                         Edit

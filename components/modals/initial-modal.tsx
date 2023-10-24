@@ -25,8 +25,8 @@ import {Button} from "@/components/ui/button";
 import {ChangeEvent, useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-// import useAxiosAuth from "@/hooks/useAxiosAuth";
 import {Loader2} from "lucide-react";
+import axiosAuthClient from "@/lib/axios/axios-client";
 
 const MAX_FILE_SIZE = 1000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -90,15 +90,14 @@ export const InitialModal = () => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             const base64String = await fileToBase64(values.circle_image?.[0]);
-            const response = await axiosAuth.post('/api/Card/CardAdd', {
+            const cardAdd = {
                 cardName: values.name,
                 imageOrginalName: values.circle_image?.[0].name,
                 imageBase64: base64String,
-            });
+            }
+            const response = await axiosAuthClient.card.addCard(cardAdd)
             form.reset();
-
             router.refresh()
-            console.log(response);
         } catch (error) {
             console.error("Error in onSubmit:", error);
         }
@@ -174,7 +173,7 @@ export const InitialModal = () => {
                             />
                         </div>
                         <DialogFooter className="bg-gray-100 px-6 py-4">
-                            <Button variant="primary" disabled={isLoading}>
+                            <Button variant="default" disabled={isLoading}>
                                 {isLoading && (<Loader2 className="mr-2 h-4 w-4 animate-spin"/>)}
                                 Create
                             </Button>
