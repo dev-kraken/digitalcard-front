@@ -11,7 +11,7 @@ export async function AllCards() {
         <>
             {allCardRes.map((card) => (
                 <div key={card.cardGuid}
-                     className="w-100 h-80 border border-teal-600 p-2 rounded flex flex-col justify-center items-center">
+                     className="rounded flex flex-col justify-center items-center">
                     <NavigationItem
                         cardId={card.cardGuid}
                         cardName={card.cardName}

@@ -1,5 +1,3 @@
-import type {GetServerSidePropsContext, NextApiRequest, NextApiResponse} from "next"
-import {getServerSession} from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import type {NextAuthOptions} from "next-auth"
 import {axiosBase} from "@/lib/axios/axios";
@@ -60,16 +58,4 @@ export const authOptions: NextAuthOptions = {
             cookies().delete('jwtToken')
         },
     }
-}
-
-export function auth(...args: [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]] | [NextApiRequest, NextApiResponse] | []) {
-    return getServerSession(...args, authOptions)
-}
-
-export async function getNextAuthToken(req:any) {
-    const session = await getServerSession(authOptions)
-    if (!session || !session.user.accessToken) {
-        return null
-    }
-    return session.user.accessToken
 }

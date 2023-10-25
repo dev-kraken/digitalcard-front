@@ -9,7 +9,7 @@ const DashboardTitle = () => {
         case '/dashboard':
             finalTitle = 'Dashboard';
             break;
-        case '/cards':
+        case '/dashboard/cards':
             finalTitle = 'Cards';
             break;
         case '/qrcode':

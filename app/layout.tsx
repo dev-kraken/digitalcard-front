@@ -1,12 +1,14 @@
 import type {Metadata} from 'next'
-import {Inter} from 'next/font/google'
+import {Poppins} from 'next/font/google'
 import './globals.css'
 import {NextAuthSession} from "@/components/providers/session-provider";
 import React from "react";
 import {ThemeProvider} from "@/components/providers/theme-provider";
 import {ModalProvider} from "@/components/providers/modal-providers";
 
-const inter = Inter({subsets: ['latin']})
+const inter = Poppins({ weight: ["200","300","400", "500","600", "700"],
+    subsets: ["latin"],
+    variable: '--font-roboto',})
 
 export const metadata: Metadata = {
     title: "Welcome Digital Business Card",

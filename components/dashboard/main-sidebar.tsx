@@ -1,9 +1,10 @@
 "use client"
 import Link from "next/link";
-import Image from "next/image";
 import {cn} from "@/lib/utils";
 import {TrendingUpIcon, LayoutDashboard, WalletCards, Settings, QrCode, ArrowLeft} from "lucide-react";
-import { useParams } from 'next/navigation'
+import {useParams, usePathname} from 'next/navigation'
+import {motion, HTMLMotionProps} from 'framer-motion'
+import {Skeleton} from "@/components/ui/skeleton";
 const routes = [
     {
         label: 'Dashboard',
@@ -70,48 +71,63 @@ const routes1 = [
 
 export const MainSideBar = () => {
     const params = useParams()
+    const pathName = usePathname()
     return (
-        <div className="space-y-4 py-4 flex flex-col h-full bg-gray-200 text-zinc-800">
-            <div className="px-3 py-2 flex-1">
-                <Link href="/dashboard" className="flex items-center pl-3 mb-14">
-                    <div className="relative h-8 w-8 mr-4">
-                        <Image className="rounded-full" fill alt="Logo"
-                               src="/logo.png"/>
+        <>
+            {!params.cardID && (
+                <motion.div
+                    initial={{x: -10, opacity: 0}}
+                    animate={{x: 0, opacity: 1}}
+                    exit={{x: 10, opacity: 0}}
+                    transition={{duration: 0.4}}
+                >
+                    <div className="space-y-1">
+                        {routes ? (
+                            routes.map((route) => (
+                                <Link
+                                    key={route.href}
+                                    href={route.href}
+                                    className={cn((route.href === pathName && 'bg-gradient-to-r from-purple-100 to-purple-400 text-slate-600'),
+                                        "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-slate-600 hover:bg-gradient-to-r from-purple-100 to-purple-400 rounded-lg transition"
+                                    )}
+                                >
+                                    <div className="flex items-center flex-1">
+                                        <route.icon className={cn("h-5 w-5 mr-3", route.color)}/>
+                                        {route.label}
+                                    </div>
+                                </Link>
+                            ))
+                        ) : (
+                            <Skeleton className="h-12 w-12 rounded-full"/>
+                        )}
                     </div>
-                    <h1 className={cn("text-2xl font-bold")}>
-                        Name
-                    </h1>
-                </Link>
-                <div className="space-y-1">
-                    {!params.cardID ? routes.map((route) => (
-                        <Link
-                            key={route.href}
-                            href={route.href}
-                            className={cn(
-                                "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-gradient-to-r from-teal-400 to-teal-600 rounded-lg transition"
-                            )}
-                        >
-                            <div className="flex items-center flex-1">
-                                <route.icon className={cn("h-5 w-5 mr-3", route.color)}/>
-                                {route.label}
-                            </div>
-                        </Link>
-                    )) : routes1.map((route) => (
-                        <Link
-                            key={route.href}
-                            href={route.href}
-                            className={cn(
-                                "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-gradient-to-r from-teal-400 to-teal-600 rounded-lg transition"
-                            )}
-                        >
-                            <div className="flex items-center flex-1">
-                                <route.icon className={cn("h-5 w-5 mr-3", route.color)}/>
-                                {route.label}
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-            </div>
-        </div>
+                </motion.div>
+            )}
+            {params.cardID && (
+                <motion.div
+                    initial={{x: 10, opacity: 0}}
+                    animate={{x: 0, opacity: 1}}
+                    exit={{x: -10, opacity: 0}}
+                    transition={{duration: 0.4}}
+                >
+                    <div className="space-y-1">
+                        {routes1.map((route) => (
+                            <Link
+                                key={route.href}
+                                href={route.href}
+                                className={cn(
+                                    "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-gradient-to-r from-teal-400 to-teal-600 rounded-lg transition"
+                                )}
+                            >
+                                <div className="flex items-center flex-1">
+                                    <route.icon className={cn("h-5 w-5 mr-3", route.color)}/>
+                                    {route.label}
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </motion.div>
+            )}
+        </>
     );
 };
