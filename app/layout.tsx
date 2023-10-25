@@ -8,7 +8,7 @@ import {ModalProvider} from "@/components/providers/modal-providers";
 
 const inter = Poppins({ weight: ["200","300","400", "500","600", "700"],
     subsets: ["latin"],
-    variable: '--font-roboto',})
+    variable: '--font-poppins',})
 
 export const metadata: Metadata = {
     title: "Welcome Digital Business Card",

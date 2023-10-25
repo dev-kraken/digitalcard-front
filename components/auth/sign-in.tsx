@@ -46,7 +46,6 @@ export function SignInForm({className, ...props}: UserAuthFormProps) {
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            console.log(values)
             setIsLoading(true)
             const res = await signIn("credentials", {
                 redirect: false,

@@ -19,7 +19,7 @@ const DashboardTitle = () => {
             finalTitle = 'Dashboard';
     }
     return (
-        <h3 className="text-2xl font-bold">{finalTitle}</h3>
+        <h3 className="text-2xl font-semibold">{finalTitle}</h3>
     )
 }
 

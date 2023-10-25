@@ -8,9 +8,9 @@ const axiosAuthC = axios.create({
     baseURL: BASE_URL,
     headers: {"Content-Type": "application/json"},
 });
-const token = Cookies.get('jwtToken')
 axiosAuthC.interceptors.request.use(
     async (config) => {
+        const token = await Cookies.get('jwtToken')
         config.headers["Authorization"] = `Bearer ${token}`;
         return config;
     },

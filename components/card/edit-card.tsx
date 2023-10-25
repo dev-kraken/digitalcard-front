@@ -43,13 +43,13 @@ export const NavigationItem = (
     return (
         <>
             <div
-                className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                className="w-full max-w-lg bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex justify-end px-4 pt-4">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild className="cursor-pointer">
                             <MoreVertical className="h-5 w-5"/>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-5 mr-20">
+                        <DropdownMenuContent className="w-5" side={"bottomra"}>
                             <DropdownMenuItem className="text-green-500">
                                 <LineChart className="mr-2 h-4 w-4"/>
                                 <span>Analytics</span>
@@ -63,8 +63,8 @@ export const NavigationItem = (
                     </DropdownMenu>
                 </div>
                 <div className="flex flex-col items-center pb-10">
-                    <Image width="90" height="90" className="mb-3 rounded-full shadow-lg"
-                           src={process.env.NEXT_PUBLIC_BACKEND_URL + '/Images/CardImages/' + cardImage}
+                    <Image width="120" height="120" className="mb-3 rounded-full shadow-lg"
+                           src={process.env.NEXT_PUBLIC_CARD_IMG + cardImage}
                            alt="Bonnie image"/>
                     <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
                         {cardName}
