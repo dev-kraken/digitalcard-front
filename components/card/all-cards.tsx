@@ -1,15 +1,15 @@
+"use client"
 import * as React from "react";
 import { NavigationItem } from "@/components/card/edit-card";
-import axiosAuthServer from "@/lib/axios/axios-server";
-export async function AllCards() {
-    const allCardRes = await axiosAuthServer.card.allCards()
-
-    if (!allCardRes){
-        return (<div>loading</div>)
+import {useAllCards} from "@/hooks/query";
+export function AllCards() {
+    const {data , isLoading, isError} = useAllCards()
+    if (isLoading){
+        return <div>Loading</div>
     }
     return (
         <>
-            {allCardRes.map((card) => (
+            {data?.map((card) => (
                 <div key={card.cardGuid}
                      className="rounded flex flex-col justify-center items-center">
                     <NavigationItem

@@ -5,24 +5,24 @@ import {NextAuthSession} from "@/components/providers/session-provider";
 import React from "react";
 import {ThemeProvider} from "@/components/providers/theme-provider";
 import {ModalProvider} from "@/components/providers/modal-providers";
-
-const inter = Poppins({ weight: ["200","300","400", "500","600", "700"],
+import ReactQueryClient from "@/components/providers/react-query";
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify';
+const poppins = Poppins({
+    weight: ["200", "300", "400", "500", "600", "700"],
     subsets: ["latin"],
-    variable: '--font-poppins',})
+    variable: '--font-roboto',
+})
 
 export const metadata: Metadata = {
     title: "Welcome Digital Business Card",
     description: "Next Level Digital Business Card",
 };
 
-export default function RootLayout({
-                                       children,
-                                   }: {
-    children: React.ReactNode
-}) {
+export default function RootLayout({children,}: { children: React.ReactNode }) {
     return (
         <html lang="en" suppressHydrationWarning>
-        <body className={inter.className}>
+        <body className={poppins.className}>
         <ThemeProvider
             attribute="class"
             defaultTheme="light"
@@ -30,8 +30,11 @@ export default function RootLayout({
             storageKey="devKraken-theme"
         >
             <NextAuthSession>
-                <ModalProvider/>
-                {children}
+                <ReactQueryClient>
+                    <ToastContainer className={poppins.className} />
+                    <ModalProvider/>
+                    {children}
+                </ReactQueryClient>
             </NextAuthSession>
         </ThemeProvider>
         </body>

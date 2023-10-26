@@ -49,7 +49,7 @@ export const NavigationItem = (
                         <DropdownMenuTrigger asChild className="cursor-pointer">
                             <MoreVertical className="h-5 w-5"/>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-5" side={"bottomra"}>
+                        <DropdownMenuContent className="w-5" side={"bottom"}>
                             <DropdownMenuItem className="text-green-500">
                                 <LineChart className="mr-2 h-4 w-4"/>
                                 <span>Analytics</span>

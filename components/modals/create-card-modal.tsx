@@ -27,7 +27,7 @@ import {useRouter} from "next/navigation";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Loader2} from "lucide-react";
 import {useModal} from "@/hooks/use-modal-store";
-import axiosAuthClient from "@/lib/axios/axios-client";
+import {useCreateCard} from "@/hooks/query";
 
 const MAX_FILE_SIZE = 1000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -61,7 +61,7 @@ export const CreateCardModal = () => {
     const {isOpen, onClose, type} = useModal();
     const router = useRouter();
     const isModalOpen = isOpen && type === "createCard";
-    // const axiosAuth = useAxiosAuth();
+    const {mutate: addMutate} = useCreateCard();
     useEffect(() => {
         setIsMounted(true);
     }, []);
@@ -98,13 +98,16 @@ export const CreateCardModal = () => {
                 imageOrginalName: values.circle_image?.[0].name,
                 imageBase64: base64String,
             }
-            const response = await axiosAuthClient.card.addCard(cardAdd)
-            if (response.success){
-                form.reset();
-                router.refresh()
-                onClose();
-                setPreview("")
-            }
+            addMutate(
+                {cardAdd},
+                {
+                    onSuccess: () => {
+                        form.reset();
+                        onClose();
+                        setPreview("")
+                    },
+                }
+            );
         } catch (error) {
             console.error("Error in onSubmit:", error);
         }

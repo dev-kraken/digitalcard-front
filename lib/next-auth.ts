@@ -1,7 +1,6 @@
 import CredentialsProvider from "next-auth/providers/credentials"
 import type {NextAuthOptions} from "next-auth"
 import {axiosBase} from "@/lib/axios/axios";
-import {cookies} from "next/headers";
 export const authOptions: NextAuthOptions = {
     pages: {
         signIn: '/sign-in',
@@ -27,15 +26,6 @@ export const authOptions: NextAuthOptions = {
                 );
                 const user = response.data;
                 if (user.success && user.accessToken !== null && user.name !== null) {
-                    cookies().set({
-                        name: 'jwtToken',
-                        value: user.accessToken,
-                        httpOnly: false,
-                        maxAge: 2 * 24 * 60 * 60,
-                        path: '/',
-                        secure: true,
-                        sameSite: 'lax',
-                    });
                     return user
                 } else {
                     return null
@@ -53,9 +43,4 @@ export const authOptions: NextAuthOptions = {
             return session;
         },
     },
-    events: {
-        async signOut(message) {
-            cookies().delete('jwtToken')
-        },
-    }
 }
