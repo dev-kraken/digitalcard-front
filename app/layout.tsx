@@ -6,8 +6,7 @@ import React from "react";
 import {ThemeProvider} from "@/components/providers/theme-provider";
 import {ModalProvider} from "@/components/providers/modal-providers";
 import ReactQueryClient from "@/components/providers/react-query";
-import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer } from 'react-toastify';
+import {Toaster} from "sonner";
 const poppins = Poppins({
     weight: ["200", "300", "400", "500", "600", "700"],
     subsets: ["latin"],
@@ -31,7 +30,7 @@ export default function RootLayout({children,}: { children: React.ReactNode }) {
         >
             <NextAuthSession>
                 <ReactQueryClient>
-                    <ToastContainer className={poppins.className} />
+                    <Toaster />
                     <ModalProvider/>
                     {children}
                 </ReactQueryClient>

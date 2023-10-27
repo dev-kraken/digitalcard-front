@@ -1,7 +1,6 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import axiosAuthServer from "@/lib/axios/axios-auth";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {toast} from "sonner";
 export const useAllCards = () => {
     return useQuery({
         queryKey: ['allCards'],
@@ -13,7 +12,7 @@ export const useCreateCard = () => {
     return useMutation({
             mutationFn: async (data: any) => await axiosAuthServer.card.addCard(data.cardAdd),
             onSuccess: () => {
-                toast("Card Created",{ hideProgressBar: true, autoClose: 2000, type: 'success', position: 'bottom-center' });
+                toast.success("Card has been created");
                 queryClient.invalidateQueries({queryKey: ['allCards']})
             },
             onError: (error) => {
@@ -28,7 +27,22 @@ export const useDeleteCard = () => {
     return useMutation({
             mutationFn: async (cardID: any) => await axiosAuthServer.card.cardDelete(cardID),
             onSuccess: () => {
-                toast("Card Deleted",{ hideProgressBar: true, autoClose: 2000, type: 'error', position: 'bottom-center' });
+                toast.error('Card has been deleted')
+                queryClient.invalidateQueries({queryKey: ['allCards']})
+            },
+            onError: (error) => {
+                console.log(error)
+            }
+        }
+    );
+};
+
+export const useSetCard = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+            mutationFn: async (dataSetCard: any) => await axiosAuthServer.client.setCardStyle(dataSetCard.dataSetCard),
+            onSuccess: () => {
+                toast.success("Card has been selected");
                 queryClient.invalidateQueries({queryKey: ['allCards']})
             },
             onError: (error) => {

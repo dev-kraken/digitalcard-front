@@ -48,8 +48,12 @@ const card = {
     cardDelete:(cardID: any) => clientModule.post<ReqRes>('/api/Card/CardDelete', cardID),
 };
 
+const client = {
+    setCardStyle:(dataSetCard:any) => clientModule.post<ReqRes>('/api/CardStyle/SetCardStyle', dataSetCard),
+}
 const axiosAuth = {
     card,
+    client,
 };
 
 export default axiosAuth;
