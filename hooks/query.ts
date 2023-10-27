@@ -22,3 +22,18 @@ export const useCreateCard = () => {
         }
     );
 };
+
+export const useDeleteCard = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+            mutationFn: async (cardID: any) => await axiosAuthServer.card.cardDelete(cardID),
+            onSuccess: () => {
+                toast("Card Deleted",{ hideProgressBar: true, autoClose: 2000, type: 'error', position: 'bottom-center' });
+                queryClient.invalidateQueries({queryKey: ['allCards']})
+            },
+            onError: (error) => {
+                console.log(error)
+            }
+        }
+    );
+};

@@ -1,6 +1,6 @@
 "use client"
 import axios, {AxiosResponse} from "axios";
-import {AllCards} from "@/types";
+import {AllCards, ReqRes} from "@/types";
 import {getCookie, setCookie} from 'cookies-next';
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const axiosAuthC = axios.create({
@@ -44,7 +44,8 @@ const clientModule = {
 const card = {
     addCard: (card: any) => clientModule.post('/api/Card/CardAdd', card),
     allCards: async () => await clientModule.get<AllCards[]>('/api/Card/GetCardByUser'),
-    cardById: (cardID: string) => clientModule.getParams<AllCards>(`/api/Card/GetCardById?id=${cardID}`)
+    cardById: (cardID: string) => clientModule.getParams<AllCards>(`/api/Card/GetCardById?id=${cardID}`),
+    cardDelete:(cardID: any) => clientModule.post<ReqRes>('/api/Card/CardDelete', cardID),
 };
 
 const axiosAuth = {

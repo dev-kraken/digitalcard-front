@@ -43,7 +43,7 @@ export const NavigationItem = (
     return (
         <>
             <div
-                className="w-full max-w-lg bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                className="w-full max-w-lg bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 h-80">
                 <div className="flex justify-end px-4 pt-4">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild className="cursor-pointer">

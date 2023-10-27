@@ -25,7 +25,7 @@ import {Button} from "@/components/ui/button";
 import {ChangeEvent, useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {Loader2} from "lucide-react";
+import {Cross, Loader2, X} from "lucide-react";
 import {useModal} from "@/hooks/use-modal-store";
 import {useCreateCard} from "@/hooks/query";
 
@@ -126,7 +126,7 @@ export const CreateCardModal = () => {
         <Dialog open={isModalOpen} onOpenChange={handelClose}>
             <DialogContent className="bg-white text-black p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
-                    <DialogTitle className="text-2xl text-center font-bold">
+                    <DialogTitle className="text-2xl text-center font-semibold">
                         Customize your Digital Card
                     </DialogTitle>
                     <DialogDescription className="text-center text-zinc-500">
@@ -137,14 +137,15 @@ export const CreateCardModal = () => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <div className="space-y-8 px-6">
-                            {preview && (
+                            {preview ? (
+                                <div className="relative w-fit mx-auto">
                                 <Avatar className="w-24 h-24 mx-auto">
-                                    <AvatarImage src={preview}/>
+                                    <AvatarImage src={preview} className="z-1"/>
                                     <AvatarFallback>PR</AvatarFallback>
                                 </Avatar>
-                            )}
-
-                            <div className="flex items-center justify-center text-center">
+                                    <X onClick={() => {setPreview("")}} className="w-5 h-5 text-white rounded-full p-1 top-0 right-0 bg-rose-500 z-10 absolute cursor-pointer"/>
+                                </div>
+                            ) : (<div className="flex items-center justify-center text-center">
                                 <FormField
                                     control={form.control}
                                     name="circle_image"
@@ -152,22 +153,47 @@ export const CreateCardModal = () => {
                                         <>
                                             <FormItem>
                                                 <FormControl>
-                                                    <Input
-                                                        type="file"
-                                                        {...rest}
-                                                        onChange={(event) => {
-                                                            const {files, displayUrl} = getImageData(event)
-                                                            setPreview(displayUrl);
-                                                            onChange(files);
-                                                        }}
-                                                    />
+                                                    <div className="flex items-center justify-center w-full">
+                                                        <label htmlFor="dropzone-file"
+                                                               className="flex flex-col items-center justify-center w-[300px] h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                                            <div
+                                                                className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                                <svg
+                                                                    className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                                                                    aria-hidden="true"
+                                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 20 16">
+                                                                    <path stroke="currentColor" strokeLinecap="round"
+                                                                          strokeLinejoin="round" strokeWidth="2"
+                                                                          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                                                </svg>
+                                                                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                                                    <span
+                                                                        className="font-semibold">Click to upload</span> or
+                                                                    drag and drop</p>
+                                                                <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG or SVG</p>
+                                                            </div>
+                                                            <Input
+                                                                id="dropzone-file"
+                                                                type="file"
+                                                                {...rest}
+                                                                onChange={(event) => {
+                                                                    const {files, displayUrl} = getImageData(event)
+                                                                    setPreview(displayUrl);
+                                                                    onChange(files);
+                                                                }}
+                                                                className="hidden"
+                                                            />
+                                                        </label>
+                                                    </div>
+
                                                 </FormControl>
                                                 <FormMessage/>
                                             </FormItem>
                                         </>
                                     )}
                                 />
-                            </div>
+                            </div>)}
                             <FormField
                                 control={form.control}
                                 name="name"
