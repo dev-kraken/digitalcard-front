@@ -51,3 +51,10 @@ export const useSetCard = () => {
         }
     );
 };
+
+export const useAllSocialMedia = () => {
+    return useQuery({
+        queryKey: ['allSocialMedia'],
+        queryFn: () => axiosAuthServer.socialMedia.allSocialMedia(),
+    })
+};

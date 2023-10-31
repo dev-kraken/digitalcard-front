@@ -1,6 +1,6 @@
 "use client"
 import axios, {AxiosResponse} from "axios";
-import {AllCards, ReqRes} from "@/types";
+import {AllCards, ReqRes, SocialMedia} from "@/types";
 import {getCookie, setCookie} from 'cookies-next';
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const axiosAuthC = axios.create({
@@ -51,9 +51,14 @@ const card = {
 const client = {
     setCardStyle:(dataSetCard:any) => clientModule.post<ReqRes>('/api/CardStyle/SetCardStyle', dataSetCard),
 }
+
+const socialMedia = {
+    allSocialMedia: async () => await clientModule.get<SocialMedia[]>('/api/SocialNetwork/SocialNetworkGetAll'),
+}
 const axiosAuth = {
     card,
     client,
+    socialMedia,
 };
 
 export default axiosAuth;

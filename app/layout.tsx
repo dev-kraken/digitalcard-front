@@ -22,6 +22,7 @@ export default function RootLayout({children,}: { children: React.ReactNode }) {
     return (
         <html lang="en" suppressHydrationWarning>
         <body className={poppins.className}>
+
         <ThemeProvider
             attribute="class"
             defaultTheme="light"
@@ -30,8 +31,8 @@ export default function RootLayout({children,}: { children: React.ReactNode }) {
         >
             <NextAuthSession>
                 <ReactQueryClient>
-                    <Toaster />
                     <ModalProvider/>
+                    <Toaster richColors={true} position="bottom-center"/>
                     {children}
                 </ReactQueryClient>
             </NextAuthSession>
