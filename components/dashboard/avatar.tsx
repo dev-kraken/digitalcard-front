@@ -11,9 +11,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Button} from "@/components/ui/button";
-import {signOut} from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 
 export function AvatarProfile() {
+    const {data: session }= useSession()
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -27,9 +28,9 @@ export function AvatarProfile() {
             <DropdownMenuContent className="w-56 mt-1" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">Kraken</p>
+                        <p className="text-sm font-medium leading-none">  {session && session.user.name}</p>
                         <p className="text-xs leading-none text-muted-foreground">
-                            kraken@kraken.com
+                            {session && session.user.email}
                         </p>
                     </div>
                 </DropdownMenuLabel>

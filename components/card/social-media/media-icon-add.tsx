@@ -46,7 +46,7 @@ const getIconComponent = (iconName: string, className: string) => {
 
 interface SocialFieldsProps {
     iconsSocial: SocialMedia[] | null;
-    addSocialInput: (id: number, label: string, type: string) => void;
+    addSocialInput: (id: number, label: string, type: string, value: string) => void;
 }
 
 export const SocialFields: React.FC<SocialFieldsProps> = ({iconsSocial, addSocialInput}) => {
@@ -56,7 +56,7 @@ export const SocialFields: React.FC<SocialFieldsProps> = ({iconsSocial, addSocia
             <div className="flex flex-wrap gap-2">
                 {iconsSocial && iconsSocial.map((media) => (
                     <Button key={media.label}
-                            onClick={() => addSocialInput(media.id,media.label, media.type)}
+                            onClick={() => addSocialInput(media.id,media.label, media.type, "")}
                             disabled={media.disable}
                             variant={"outline"} className=""
                     >

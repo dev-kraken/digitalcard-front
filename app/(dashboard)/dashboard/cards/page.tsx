@@ -8,7 +8,6 @@ export default async function Cards() {
             <div className="w-100 border-2 border-purple-400 border-dashed p-3 rounded shadow-sm h-80">
                 <AddCard />
             </div>
-
         </div>
     )
 }

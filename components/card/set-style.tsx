@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image";
 import {CheckCircle2} from "lucide-react";
-import {useSetCard} from "@/hooks/query";
+import {useGetStyle, useSetCard} from "@/hooks/query";
 import {useParams} from "next/navigation";
 import {useState} from "react";
 import {cn} from "@/lib/utils";
@@ -15,11 +15,13 @@ interface StyleCard {
 
 interface ListStyleProps {
     listStyle: StyleCard[]
+    cardID: string
 }
 
-export function SetStyle({listStyle}: ListStyleProps) {
+export function SetStyle({listStyle, cardID}: ListStyleProps) {
     const [pending, setPending] = useState(false)
     const {mutate: addMutate} = useSetCard();
+    const {data: dataStyle, isLoading} = useGetStyle(cardID)
     const params = useParams()
     const onClickSetStyle = (styleID: number) => {
         setPending(true)
@@ -45,7 +47,7 @@ export function SetStyle({listStyle}: ListStyleProps) {
                         <div className="relative w-fit border-dashed border-2 border-purple-400 rounded-3xl">
                             <label htmlFor={`style${style.id}`}
                                    className={cn(pending && "pointer-events-none ", "cursor-pointer")}>
-                                <input onClick={() => {onClickSetStyle(style.id)}} type="radio" id={`style${style.id}`} name="hosting" value="hosting-big"
+                                <input checked={style.id == dataStyle?.styleId} onChange={() => {}} onClick={() => {onClickSetStyle(style.id)}} type="radio" id={`style${style.id}`} name="hosting" value="hosting-big"
                                        className="hidden peer"/>
 
                                 <Image width="300" height="50" className=""

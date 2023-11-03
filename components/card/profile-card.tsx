@@ -1,9 +1,7 @@
 "use client";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
 import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-
+import {zodResolver} from "@hookform/resolvers/zod";
 import {
     Form,
     FormControl,
@@ -12,11 +10,12 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
 import {ChangeEvent, useEffect, useState} from "react";
 import {Loader2, X} from "lucide-react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {useGetProfile, useSetCardProfile} from "@/hooks/query";
 
 const MAX_FILE_SIZE = 1000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -30,17 +29,14 @@ const formSchema = z.object({
     slogan: z.string().min(1, {
         message: "Slogan is required.",
     }),
-    profileUrl: z.string().min(0, {
-        message: "Card image is required.",
-    }),
     circle_image: z.any()
         .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max image size is 10MB.`)
         .refine(
             (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
             "Only .jpg, .jpeg, .png and .webp formats are supported."
-        ),
-    action:z.string(),
+        ).optional(),
 });
+
 function getImageData(event: ChangeEvent<HTMLInputElement>) {
     const dataTransfer = new DataTransfer();
 
@@ -52,47 +48,74 @@ function getImageData(event: ChangeEvent<HTMLInputElement>) {
 
     return {files, displayUrl};
 }
-interface cardIdParams{
+
+interface cardIdParams {
     paramsCardId: string;
 }
 
-export const ProfileSection = ({ card }: any, {paramsCardId}:cardIdParams) => {
+export const ProfileSection = ({paramsCardId}: cardIdParams) => {
+    const {data:CardProfile} = useGetProfile(paramsCardId)
+
     const [preview, setPreview] = useState("");
+    const {mutate: addMutate} = useSetCardProfile()
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
-            profileUrl: "",
             license: "",
             slogan: "",
-            action: card ? "update" : "create",
             circle_image: "",
         },
     });
 
     useEffect(() => {
-        if (card) {
-            form.setValue("name", card.name);
-            form.setValue("license", card.license);
-            form.setValue("slogan", card.slogan);
-            form.setValue("profileUrl", card.profileUrl);
+        if (CardProfile && CardProfile.licenseNumber !== null && CardProfile.profileName !== null) {
+            form.setValue("name", CardProfile.profileName);
+            form.setValue("license", CardProfile.licenseNumber);
+            form.setValue("slogan", CardProfile.subHeader);
+
+            setPreview(process.env.NEXT_PUBLIC_PROFILE_IMG + CardProfile.profileImagesysName)
         }
-    }, [card, form]);
+    }, [CardProfile, form]);
     const isLoading = form.formState.isSubmitting;
+    function fileToBase64(file: Blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                // @ts-ignore
+                const base64String = event.target.result;
+                resolve(base64String);
+            };
+            reader.onerror = (error) => {
+                reject(error);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            await axios.post(`/api/card/${paramsCardId}/createprofile`, values);
-
-            // form.reset();
+            const base64String = await fileToBase64(values.circle_image?.[0]);
+            const cardAdd = {
+                profileName:values.name,
+                licenseNumber: values.license,
+                subHeader: values.slogan,
+                profileImageOrginalName: values.circle_image?.[0].name,
+                profileImageBase64: base64String,
+                cardId: paramsCardId,
+            }
+            addMutate(
+                {cardAdd},
+                {
+                    onSuccess: () => {
+                    },
+                }
+            );
         } catch (error) {
             console.log(error);
         }
     };
 
-    const handelClose = () => {
-        form.reset();
-    };
-
+    console.log(preview)
 
     return (
         <div className="w-[50%] mx-auto">
@@ -104,7 +127,10 @@ export const ProfileSection = ({ card }: any, {paramsCardId}:cardIdParams) => {
                                 <AvatarImage src={preview} className="z-1"/>
                                 <AvatarFallback>PR</AvatarFallback>
                             </Avatar>
-                            <X onClick={() => {setPreview("")}} className="w-5 h-5 text-white rounded-full p-1 top-0 right-0 bg-rose-500 z-10 absolute cursor-pointer"/>
+                            <X onClick={() => {
+                                setPreview("")
+                            }}
+                               className="w-5 h-5 text-white rounded-full p-1 top-0 right-0 bg-rose-500 z-10 absolute cursor-pointer"/>
                         </div>
                     ) : (<div className="flex items-center justify-center text-center">
                         <FormField
@@ -132,7 +158,8 @@ export const ProfileSection = ({ card }: any, {paramsCardId}:cardIdParams) => {
                                                                     <span
                                                                         className="font-semibold">Click to upload</span> or
                                                             drag and drop</p>
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG or SVG</p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG
+                                                            or SVG</p>
                                                     </div>
                                                     <Input
                                                         id="dropzone-file"
@@ -158,7 +185,7 @@ export const ProfileSection = ({ card }: any, {paramsCardId}:cardIdParams) => {
                     <FormField
                         control={form.control}
                         name="name"
-                        render={({ field }) => (
+                        render={({field}) => (
                             <FormItem>
                                 <FormLabel className="uppercase text-zinc-500 dark:text-white">
                                     Profile Name
@@ -171,14 +198,14 @@ export const ProfileSection = ({ card }: any, {paramsCardId}:cardIdParams) => {
                                         {...field}
                                     />
                                 </FormControl>
-                                <FormMessage className="text-rose-500" />
+                                <FormMessage className="text-rose-500"/>
                             </FormItem>
                         )}
                     />
                     <FormField
                         control={form.control}
                         name="license"
-                        render={({ field }) => (
+                        render={({field}) => (
                             <FormItem>
                                 <FormLabel className="uppercase text-zinc-500 dark:text-white">
                                     License Number
@@ -191,14 +218,14 @@ export const ProfileSection = ({ card }: any, {paramsCardId}:cardIdParams) => {
                                         {...field}
                                     />
                                 </FormControl>
-                                <FormMessage className="text-rose-500" />
+                                <FormMessage className="text-rose-500"/>
                             </FormItem>
                         )}
                     />
                     <FormField
                         control={form.control}
                         name="slogan"
-                        render={({ field }) => (
+                        render={({field}) => (
                             <FormItem>
                                 <FormLabel className="uppercase text-zinc-500 dark:text-white">
                                     Your Slang
@@ -211,13 +238,13 @@ export const ProfileSection = ({ card }: any, {paramsCardId}:cardIdParams) => {
                                         {...field}
                                     />
                                 </FormControl>
-                                <FormMessage className="text-rose-500" />
+                                <FormMessage className="text-rose-500"/>
                             </FormItem>
                         )}
                     />
                     <Button variant="default" disabled={isLoading}>
-                        {isLoading && (<Loader2 className="mr-2 h-4 w-4 animate-spin" />)}
-                        {!card ? "Create Profile" : "Update Profile"}
+                        {isLoading && (<Loader2 className="mr-2 h-4 w-4 animate-spin"/>)}
+                        {CardProfile && CardProfile.profileName !== null ? "Update Profile" : "Create Profile"}
                     </Button>
                 </form>
             </Form>

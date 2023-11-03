@@ -1,6 +1,6 @@
 "use client"
 import axios, {AxiosResponse} from "axios";
-import {AllCards, ReqRes, SocialMedia} from "@/types";
+import {AllCards, CardProfile, ReqRes, SocialMedia, SocialMediaD, StyleGet} from "@/types";
 import {getCookie, setCookie} from 'cookies-next';
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const axiosAuthC = axios.create({
@@ -46,14 +46,19 @@ const card = {
     allCards: async () => await clientModule.get<AllCards[]>('/api/Card/GetCardByUser'),
     cardById: (cardID: string) => clientModule.getParams<AllCards>(`/api/Card/GetCardById?id=${cardID}`),
     cardDelete:(cardID: any) => clientModule.post<ReqRes>('/api/Card/CardDelete', cardID),
+    cardProfile:async (dataSetProfile: any) => await clientModule.post<ReqRes>('/api/CardProfile/CardProfileSet', dataSetProfile),
+    getCardProfile: (cardID: string) => clientModule.getParams<CardProfile>(`/api/CardProfile/CardProfileGet?cardGuid=${cardID}`),
 };
 
 const client = {
     setCardStyle:(dataSetCard:any) => clientModule.post<ReqRes>('/api/CardStyle/SetCardStyle', dataSetCard),
+    getStyleByID: (cardID: string) => clientModule.getParams<StyleGet>(`/api/CardStyle/CardStyleGetByCard?cardGuid=${cardID}`),
 }
 
 const socialMedia = {
     allSocialMedia: async () => await clientModule.get<SocialMedia[]>('/api/SocialNetwork/SocialNetworkGetAll'),
+    setSocialMedia:async (dataSetMedia: any) => await clientModule.post<ReqRes>('/api/CardSocialNetwork/CardSocialNetworkSet', dataSetMedia),
+    getSocialByID: (cardID: string) => clientModule.getParams<SocialMediaD[]>(`/api/CardSocialNetwork/CardSocialNetworkGetByCard?cardGuid=${cardID}`),
 }
 const axiosAuth = {
     card,

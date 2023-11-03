@@ -91,7 +91,7 @@ export const MainSideBar = () => {
         {
             label: 'Listings',
             icon: Home,
-            href: `/dashboard/cards/${params?.cardID}/listing`,
+            href: `/dashboard/cards/${params?.cardID}/listings`,
         },
         {
             label: 'Reviews',

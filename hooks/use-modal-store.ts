@@ -1,6 +1,6 @@
 import {create} from "zustand";
 
-export type ModalType = "emailVerification" | "deleteCard" | "createCard";
+export type ModalType = "emailVerification" | "deleteCard" | "createCard" | "addHomeListing";
 interface Card {
     cardId: string;
     cardName: string;

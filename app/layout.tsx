@@ -32,7 +32,7 @@ export default function RootLayout({children,}: { children: React.ReactNode }) {
             <NextAuthSession>
                 <ReactQueryClient>
                     <ModalProvider/>
-                    <Toaster richColors={true} position="bottom-center"/>
+                    <Toaster richColors={true} position="top-center"/>
                     {children}
                 </ReactQueryClient>
             </NextAuthSession>

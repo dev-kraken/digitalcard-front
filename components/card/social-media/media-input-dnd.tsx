@@ -10,12 +10,14 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Button} from "@/components/ui/button";
-import {useParams} from "next/navigation";
+import {useParams, useRouter} from "next/navigation";
+import {useSetSocialMedia} from "@/hooks/query";
 
 interface SocialInput {
     id: number
     label: string;
     type: string;
+    value: string;
 }
 
 interface SocialInputsGridProps {
@@ -24,27 +26,26 @@ interface SocialInputsGridProps {
     removeSocialInput: (label: string) => void;
 }
 
-// const formSchemaMedia = z.object({
-//     Facebook: z.string().min(1, {
-//         message: "Facebook link is required.",
-//     }),
-//     Instagram: z.string().min(1, {
-//         message: "Instagram link is required.",
-//     }),
-//     Linkedin: z.string().min(1, {
-//         message: "Linkedin link is required.",
-//     }),
-//     Website: z.string().min(1, {
-//         message: "Linkedin link is required.",
-//     }),
-// });
-let formSchemaMedia = z.record(z.string(), z.string());
+let formSchemaMedia = z.record(z.string({
+    required_error: "This field is required",
+}));
+
 export const SocialInputsGrid: React.FC<SocialInputsGridProps> = ({socialInputs, onDragEnd, removeSocialInput}) => {
     const paramsCardID = useParams();
-    const mask = [{mask: '(000) 000-0000'}, {mask: '(000) 000-0000'}];
+    const {mutate: addMutate} = useSetSocialMedia()
     const form = useForm({
         resolver: zodResolver(formSchemaMedia),
     });
+
+    if (socialInputs){
+        socialInputs.map((data) => {
+            if (data.value !== ""){
+                form.setValue(data.label, data.value)
+            }
+        })
+    }
+
+
     const isLoading = form.formState.isSubmitting;
     const onSubmit = async (values: z.infer<typeof formSchemaMedia>) => {
        let data : any[] = [];
@@ -53,11 +54,18 @@ export const SocialInputsGrid: React.FC<SocialInputsGridProps> = ({socialInputs,
                 link: values[asd.label],
                 priority: index,
                 cardId:paramsCardID.cardID,
-                socialNetworkId:asd.id
+                socialNetworkId:asd.id,
             }
             data.push(d)
        })
-        console.log(data)
+        addMutate(
+            {data},
+            {
+                onSuccess: () => {
+
+                },
+            }
+        );
     }
     return (
         <Form {...form} >
@@ -67,7 +75,7 @@ export const SocialInputsGrid: React.FC<SocialInputsGridProps> = ({socialInputs,
                         {socialInputs.map((media, index) => (
                             <Droppable droppableId={`droppable${index}`} key={media.label}>
                                 {(provided) => (
-                                    <div className="asd" {...provided.droppableProps} ref={provided.innerRef}>
+                                    <div className="media-input" {...provided.droppableProps} ref={provided.innerRef}>
                                         <Draggable draggableId={`dnd${media.label}`} index={index}>
                                             {(provided) => (
                                                 <div className="shadow border my-4 p-4 rounded"
@@ -82,16 +90,10 @@ export const SocialInputsGrid: React.FC<SocialInputsGridProps> = ({socialInputs,
                                                         </div>
                                                         <X onClick={() => {
                                                             removeSocialInput(media.label);
-                                                            form.reset();
+                                                            form.unregister(media.label)
                                                         }}
                                                            className="text-rose-500 cursor-pointer"/>
                                                     </div>
-                                                    {media.type === 'tel' ?
-                                                        <IMaskInput
-                                                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                                            mask={mask} name="phone"
-                                                            placeholder="Enter phone number here"/>
-                                                        :
                                                         <FormField
                                                             control={form.control}
                                                             // @ts-ignore
@@ -110,7 +112,6 @@ export const SocialInputsGrid: React.FC<SocialInputsGridProps> = ({socialInputs,
                                                                 </FormItem>
                                                             )}
                                                         />
-                                                    }
 
                                                 </div>
                                             )}

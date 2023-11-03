@@ -6,7 +6,10 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import {Overview} from "@/components/charts/overview";
+import { unstable_getServerSession } from 'next-auth/next';
 export default async function Dashboard() {
+    const session = await unstable_getServerSession();
+    console.log(session)
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 p-3">
             <Card className="col-span-4">

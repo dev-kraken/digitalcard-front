@@ -43,7 +43,7 @@ export const useSetCard = () => {
             mutationFn: async (dataSetCard: any) => await axiosAuthServer.client.setCardStyle(dataSetCard.dataSetCard),
             onSuccess: () => {
                 toast.success("Card has been selected");
-                queryClient.invalidateQueries({queryKey: ['allCards']})
+                queryClient.invalidateQueries({queryKey: ['getCardStyle']})
             },
             onError: (error) => {
                 console.log(error)
@@ -57,4 +57,53 @@ export const useAllSocialMedia = () => {
         queryKey: ['allSocialMedia'],
         queryFn: () => axiosAuthServer.socialMedia.allSocialMedia(),
     })
+};
+
+export const useGetSocialMedia = (cardID:string) => {
+    return useQuery({
+        queryKey: ['getSocialMedia'],
+        queryFn: () => axiosAuthServer.socialMedia.getSocialByID(cardID),
+    })
+};
+
+export const useGetProfile = (cardID:string) => {
+    return useQuery({
+        queryKey: ['getCardProfile'],
+        queryFn: () => axiosAuthServer.card.getCardProfile(cardID),
+    })
+};
+export const useGetStyle = (cardID:string) => {
+    return useQuery({
+        queryKey: ['getCardStyle'],
+        queryFn: () => axiosAuthServer.client.getStyleByID(cardID),
+    })
+};
+
+export const useSetCardProfile = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+            mutationFn: async (dataProfile: any) => await axiosAuthServer.card.cardProfile(dataProfile.cardAdd),
+            onSuccess: () => {
+                toast.success("Profile has been added");
+            },
+            onError: (error) => {
+                console.log(error)
+            }
+        }
+    );
+};
+
+export const useSetSocialMedia = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+            mutationFn: async (dataSetMedia: any) => await axiosAuthServer.socialMedia.setSocialMedia(dataSetMedia.data),
+            onSuccess: () => {
+                toast.success("Media has been added");
+                queryClient.invalidateQueries({queryKey: ['getSocialMedia']})
+            },
+            onError: (error) => {
+                console.log(error)
+            }
+        }
+    );
 };
