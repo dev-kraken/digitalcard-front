@@ -1,12 +1,13 @@
 import type {Metadata} from 'next'
 import {Poppins} from 'next/font/google'
 import './globals.css'
-import {NextAuthSession} from "@/components/providers/session-provider";
+import SessionProvider from "@/components/providers/session-provider";
 import React from "react";
 import {ThemeProvider} from "@/components/providers/theme-provider";
 import {ModalProvider} from "@/components/providers/modal-providers";
 import ReactQueryClient from "@/components/providers/react-query";
 import {Toaster} from "sonner";
+import {getServerSession} from "next-auth";
 const poppins = Poppins({
     weight: ["200", "300", "400", "500", "600", "700"],
     subsets: ["latin"],
@@ -18,7 +19,8 @@ export const metadata: Metadata = {
     description: "Next Level Digital Business Card",
 };
 
-export default function RootLayout({children,}: { children: React.ReactNode }) {
+export default async function RootLayout({children,}: { children: React.ReactNode }) {
+    const session = await getServerSession()
     return (
         <html lang="en" suppressHydrationWarning>
         <body className={poppins.className}>
@@ -29,13 +31,13 @@ export default function RootLayout({children,}: { children: React.ReactNode }) {
             enableSystem={false}
             storageKey="devKraken-theme"
         >
-            <NextAuthSession>
+            <SessionProvider session={session}>
                 <ReactQueryClient>
                     <ModalProvider/>
                     <Toaster richColors={true} position="top-center"/>
                     {children}
                 </ReactQueryClient>
-            </NextAuthSession>
+            </SessionProvider>
         </ThemeProvider>
         </body>
         </html>

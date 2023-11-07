@@ -43,9 +43,17 @@ type styleResponse = {
     cardId: string,
     styleId: number
 }
+
+type State = {
+    id: string;
+    name: string;
+    abbreviation: string;
+    countryId: number;
+}
 export type AllCards = AllCard;
 export type ReqRes = ReqResponse;
 export type SocialMedia = SocialMediaT;
 export type SocialMediaD = SocialMediaData;
 export type CardProfile = CardProfileT;
 export type StyleGet = styleResponse;
+export type AllState = State;

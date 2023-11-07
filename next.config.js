@@ -7,6 +7,7 @@ const nextConfig = {
         domains:["192.168.100.53"]
     },
     reactStrictMode: true,
+
 }
 
 module.exports = nextConfig

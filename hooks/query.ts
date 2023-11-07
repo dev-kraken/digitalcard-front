@@ -66,6 +66,13 @@ export const useGetSocialMedia = (cardID:string) => {
     })
 };
 
+export const useGetState = () => {
+    return useQuery({
+        queryKey: ['getAllState'],
+        queryFn: () => axiosAuthServer.countryData.getAllState(),
+    })
+};
+
 export const useGetProfile = (cardID:string) => {
     return useQuery({
         queryKey: ['getCardProfile'],
@@ -85,6 +92,20 @@ export const useSetCardProfile = () => {
             mutationFn: async (dataProfile: any) => await axiosAuthServer.card.cardProfile(dataProfile.cardAdd),
             onSuccess: () => {
                 toast.success("Profile has been added");
+            },
+            onError: (error) => {
+                console.log(error)
+            }
+        }
+    );
+};
+
+export const useSetListing = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+            mutationFn: async (dataListing: any) => await axiosAuthServer.client.setListing(dataListing.dataValues),
+            onSuccess: () => {
+                toast.success("Listing has been added");
             },
             onError: (error) => {
                 console.log(error)
