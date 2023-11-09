@@ -3,9 +3,9 @@ import * as React from "react";
 import {NavigationItem} from "@/components/card/edit-card";
 import {useAllCards} from "@/hooks/query";
 import {Skeleton} from "@/components/ui/skeleton";
-
+import {useGetAllCardsQuery} from "@/redux/services/cardApi";
 export function AllCards() {
-    const {data, isLoading, isError} = useAllCards()
+    const {data, isLoading, isError} = useGetAllCardsQuery(null)
     if (isLoading) {
         return (
             <div className="rounded flex flex-col justify-center items-center">

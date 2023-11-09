@@ -1,14 +1,12 @@
 import { promises as fs } from "fs"
 import path from "path"
 import { Metadata } from "next"
-import Image from "next/image"
 import { z } from "zod"
 
 import { taskSchema } from "@/components/listings/data/schema"
 import {DataTable} from "@/components/listings/components/data-table";
 import {columns} from "@/components/listings/components/columns";
 import {List} from "lucide-react";
-import {Button} from "@/components/ui/button";
 import {AddHomeListing} from "@/components/listings/add-listing";
 
 export const metadata: Metadata = {
@@ -29,7 +27,6 @@ async function getTasks() {
 
 export default async function TaskPage() {
     const tasks = await getTasks()
-
     return (
         <>
             <div className="h-full flex-1 flex-col space-y-8 md:flex">

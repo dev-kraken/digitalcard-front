@@ -1,28 +1,36 @@
-import {create} from "zustand";
+import { create } from 'zustand';
+import { AllState } from '@/types';
 
-export type ModalType = "emailVerification" | "deleteCard" | "createCard" | "addHomeListing";
+export type ModalType =
+  | 'emailVerification'
+  | 'deleteCard'
+  | 'createCard'
+  | 'addHomeListing';
+
 interface Card {
-    cardId: string;
-    cardName: string;
+  cardId: string;
+  cardName: string;
 }
+
 interface ModalData {
-    passCard?: Card;
-    apiUrl?: string;
-    query?: Record<string, any>;
+  passCard?: Card;
+  apiUrl?: string;
+  query?: Record<string, any>;
+  allStates?: AllState[];
 }
 
 interface ModalStore {
-    type: ModalType | null;
-    data: ModalData;
-    isOpen: boolean;
-    onOpen: (type: ModalType, data?: ModalData) => void;
-    onClose: () => void;
+  type: ModalType | null;
+  data: ModalData;
+  isOpen: boolean;
+  onOpen: (type: ModalType, data?: ModalData) => void;
+  onClose: () => void;
 }
 
 export const useModal = create<ModalStore>((set) => ({
-    type: null,
-    data: {},
-    isOpen: false,
-    onOpen: (type, data = {}) => set({ isOpen: true, type, data }),
-    onClose: () => set({ type: null, isOpen: false }),
+  type: null,
+  data: {},
+  isOpen: false,
+  onOpen: (type, data = {}) => set({ isOpen: true, type, data }),
+  onClose: () => set({ type: null, isOpen: false }),
 }));

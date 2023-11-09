@@ -8,6 +8,8 @@ import {ModalProvider} from "@/components/providers/modal-providers";
 import ReactQueryClient from "@/components/providers/react-query";
 import {Toaster} from "sonner";
 import {getServerSession} from "next-auth";
+import {ReduxProviders} from "@/redux/provider";
+
 const poppins = Poppins({
     weight: ["200", "300", "400", "500", "600", "700"],
     subsets: ["latin"],
@@ -24,21 +26,22 @@ export default async function RootLayout({children,}: { children: React.ReactNod
     return (
         <html lang="en" suppressHydrationWarning>
         <body className={poppins.className}>
-
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem={false}
-            storageKey="devKraken-theme"
-        >
-            <SessionProvider session={session}>
-                <ReactQueryClient>
-                    <ModalProvider/>
-                    <Toaster richColors={true} position="top-center"/>
-                    {children}
-                </ReactQueryClient>
-            </SessionProvider>
-        </ThemeProvider>
+        <ReduxProviders>
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="light"
+                enableSystem={false}
+                storageKey="devKraken-theme"
+            >
+                <SessionProvider session={session}>
+                    <ReactQueryClient>
+                        <ModalProvider/>
+                        <Toaster richColors={true} position="top-center"/>
+                        {children}
+                    </ReactQueryClient>
+                </SessionProvider>
+            </ThemeProvider>
+        </ReduxProviders>
         </body>
         </html>
     )
