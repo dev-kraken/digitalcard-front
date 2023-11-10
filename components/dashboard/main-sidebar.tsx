@@ -99,6 +99,11 @@ export const MainSideBar = () => {
             href: `/dashboard/cards/${params?.cardID}/reviews`,
         },
         {
+            label: 'QrCode',
+            icon: QrCode,
+            href: `/dashboard/cards/${params?.cardID}/qr-code`,
+        },
+        {
             label: 'Contact Form',
             icon: Contact,
             href: `/dashboard/cards/${params?.cardID}/contact-form`,
