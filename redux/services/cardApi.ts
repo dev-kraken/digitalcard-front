@@ -1,5 +1,5 @@
 import { apiSlice } from '@/redux/slices/apiSlice';
-import {AllCards, AllState} from '@/types';
+import { AllCards, AllState } from '@/types';
 
 interface StyleCard {
   id: number;
@@ -29,7 +29,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: ['AlCards']
+      invalidatesTags: ['AlCards'],
     }),
     getAllState: builder.query<AllState[], null>({
       query: () => ({
@@ -40,7 +40,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: '/api/Card/GetCardByUser',
       }),
-      providesTags: ['AlCards']
+      providesTags: ['AlCards'],
+    }),
+    getAllListings: builder.query({
+      query: (cardID) => ({
+        url: `/api/Listing/ListingGetByCard?cardGuid=${cardID}`,
+      }),
     }),
   }),
 });
@@ -51,4 +56,5 @@ export const {
   useSetListingMutation,
   useAddNewCardMutation,
   useGetAllCardsQuery,
+  useGetAllListingsQuery,
 } = userApiSlice;
